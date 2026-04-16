@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@700&display=swap" rel="stylesheet">
+    
+
+<!-- SEO Meta Tags -->
+<title>Iconic Vision Studios - Music Video Treatment Generator</title>
+<meta property="og:title" content="Iconic Vision Studios - Music Video Treatment Generator" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Iconic Vision Studios - Music Video Treatment Generator" />
+<!-- End SEO Meta Tags -->
+
+<script data-field-replace>
+(function(){
+  var params=new URLSearchParams(window.location.search);
+  var fields={};
+  var paramMap={
+    'first_name':'firstName','last_name':'lastName','full_name':'fullName',
+    'email':'email','phone':'phone','company':'company',
+    'city':'city','state':'state','country':'country'
+  };
+  var skipTags={'SCRIPT':1,'STYLE':1,'NOSCRIPT':1,'TEXTAREA':1,'CODE':1,'PRE':1};
+  var hasUrlFields=false;
+  for(var p in paramMap){
+    var v=params.get(p);
+    if(v){fields[paramMap[p]]=v;hasUrlFields=true;}
+  }
+  var contactId=params.get('contact_id');
+  function esc(s){
+    if(!s)return s;
+    var d=document.createElement('div');
+    d.appendChild(document.createTextNode(s));
+    return d.innerHTML;
+  }
+  function doReplace(data){
+    var r={};
+    r['{{full_name}}']=esc(((data.firstName||'')+' '+(data.lastName||'')).trim()||((data.fullName||data.name)||''));
+    r['{{first_name}}']=esc(data.firstName||(data.name?data.name.split(' ')[0]:'')||'');
+    r['{{last_name}}']=esc(data.lastName||(data.name&&data.name.indexOf(' ')>-1?data.name.substring(data.name.indexOf(' ')+1):'')||'');
+    r['{{email}}']=esc(data.email||'');
+    r['{{phone}}']=esc(data.phone||'');
+    r['{{company}}']=esc(data.company||'');
+    r['{{city}}']=esc(data.city||'');
+    r['{{state}}']=esc(data.state||'');
+    r['{{country}}']=esc(data.country||'');
+    r['{{date}}']=new Date().toLocaleDateString();
+    r['{{time}}']=new Date().toLocaleTimeString();
+    r['{{location}}']=[data.city,data.state,data.country].filter(Boolean).join(', ');
+    r['{{tracking_id}}']=esc(data.trackingId||'');
+    r['{{lastClickedProduct}}']=esc(data.lastClickedProduct||'');
+    r['{{lastProductClickDate}}']=esc(data.lastProductClickDate||'');
+    r['{{lastClickedProductPrice}}']=esc(data.lastClickedProductPrice||'');
+    r['{{lastClickedProductURL}}']=esc(data.lastClickedProductURL||'');
+    r['{{productsClickedCount}}']=esc(data.productsClickedCount||'0');
+    r['{{ip_address}}']=esc(data.ipAddress||'');
+    r['{{ip}}']=esc(data.ipAddress||'');
+    if(data.customFields){
+      for(var k in data.customFields){
+        r['{{'+k+'}}']=esc(String(data.customFields[k]||''));
+      }
+    }
+    params.forEach(function(v,k){
+      if(!paramMap[k]&&k!=='contact_id'&&k!=='page_id'&&k.indexOf('utm_')!==0){
+        r['{{'+k+'}}']=esc(v);
+      }
+    });
+    var hasValues=false;
+    for(var key in r){if(r[key]){hasValues=true;break;}}
+    if(!hasValues)return;
+    var walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{
+      acceptNode:function(n){
+        var p=n.parentNode;
+        if(p&&skipTags[p.nodeName])return NodeFilter.FILTER_REJECT;
+        return NodeFilter.FILTER_ACCEPT;
+      }
+    });
+    var node;
+    while(node=walker.nextNode()){
+      var txt=node.nodeValue;
+      if(txt&&txt.indexOf('{{')>-1){
+        var changed=txt;
+        for(var ph in r){
+          if(r[ph]&&changed.indexOf(ph)>-1){
+            changed=changed.split(ph).join(r[ph]);
+          }
+        }
+        if(changed!==txt)node.nodeValue=changed;
+      }
+    }
+    var attrs=['value','placeholder','content','alt','title'];
+    attrs.forEach(function(attr){
+      var els=document.querySelectorAll('['+attr+'*="{{"]');
+      for(var i=0;i<els.length;i++){
+        var tag=els[i].tagName;
+        if(skipTags[tag])continue;
+        var val=els[i].getAttribute(attr);
+        if(val){
+          var nv=val;
+          for(var ph in r){
+            if(r[ph]&&nv.indexOf(ph)>-1){
+              nv=nv.split(ph).join(r[ph]);
+            }
+          }
+          if(nv!==val)els[i].setAttribute(attr,nv);
+        }
+      }
+    });
+  }
+  function run(){
+    if(contactId){
+      var xhr=new XMLHttpRequest();
+      xhr.open('GET','https://paymegpt.com/api/landing/context/'+encodeURIComponent(contactId)+'?page_id=3295');
+      xhr.onload=function(){
+        if(xhr.status===200){
+          try{
+            var resp=JSON.parse(xhr.responseText);
+            if(resp.success&&resp.contact){
+              var merged=resp.contact;
+              for(var k in fields){merged[k]=fields[k];}
+              doReplace(merged);
+              return;
+            }
+          }catch(e){}
+        }
+        if(hasUrlFields)doReplace(fields);
+      };
+      xhr.onerror=function(){if(hasUrlFields)doReplace(fields);};
+      xhr.send();
+    }else if(hasUrlFields){
+      doReplace(fields);
+    }
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',run);}
+  else{run();}
+})();
+</script>
+<script data-payment>
+(function(){
+  var slug='MMTR5aZ';
+  var apiBase='https://paymegpt.com';
+  function findEmail(){
+    var ids=['email','emailAddress','buyer-email','buyerEmail','user-email','userEmail','checkout-email','customer-email','contact-email'];
+    for(var i=0;i<ids.length;i++){var el=document.getElementById(ids[i]);if(el&&el.value&&el.value.includes('@'))return el.value.trim();}
+    var inputs=document.querySelectorAll('input[type="email"],input[name*="email"],input[placeholder*="email"],input[placeholder*="Email"]');
+    for(var j=0;j<inputs.length;j++){if(inputs[j].value&&inputs[j].value.includes('@'))return inputs[j].value.trim();}
+    return '';
+  }
+  function findName(){
+    var ids=['name','fullName','full-name','buyer-name','buyerName','customer-name','userName','user-name'];
+    for(var i=0;i<ids.length;i++){var el=document.getElementById(ids[i]);if(el&&el.value)return el.value.trim();}
+    var inputs=document.querySelectorAll('input[name*="name"]:not([name*="email"]):not([type="email"]),input[placeholder*="name"]:not([placeholder*="email"]):not([type="email"]),input[placeholder*="Name"]:not([type="email"])');
+    for(var j=0;j<inputs.length;j++){if(inputs[j].value)return inputs[j].value.trim();}
+    return '';
+  }
+  var __realProcessPayment=function(a,b,c,d,e){
+    var amountCents,email,productName,productDescription,customerName,quantity;
+    if(a&&typeof a==='object'){
+      amountCents=a.amountCents;email=a.email;productName=a.productName;
+      productDescription=a.productDescription||'';customerName=a.name||'';quantity=a.quantity||1;
+    }else{
+      amountCents=typeof a==='number'?a:0;productName=typeof b==='string'?b:'';
+      productDescription=typeof c==='string'?c:'';email='';customerName='';quantity=1;
+    }
+    if(!email)email=findEmail();
+    if(!customerName)customerName=findName();
+    if(!productName){alert('Product name is required.');return Promise.reject('no_product_name');}
+    if(!amountCents||amountCents<100){alert('Amount must be at least $1.00');return Promise.reject('invalid_amount');}
+    if(!email){alert('Please enter your email address.');return Promise.reject('no_email');}
+    var successBase=window.location.href.split('?')[0];
+    return fetch(apiBase+'/api/landing-pages/public/'+slug+'/payment/checkout',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:email,name:customerName,amountCents:amountCents,productName:productName,productDescription:productDescription,quantity:quantity,successUrl:successBase+'?payment=success&product='+encodeURIComponent(productName)+'&session_id={CHECKOUT_SESSION_ID}',cancelUrl:successBase+'?payment=cancelled'})
+    }).then(function(r){return r.json();}).then(function(d){
+      if(d.checkoutUrl){window.location.href=d.checkoutUrl;}
+      else{alert(d.error||'Failed to process payment');throw new Error(d.error);}
+    });
+  };
+  Object.defineProperty(window,'__processPayment',{value:__realProcessPayment,writable:false,configurable:false});
+  document.addEventListener('DOMContentLoaded',function(){
+    var urlParams=new URLSearchParams(window.location.search);
+    if(urlParams.get('payment')==='success'){
+      var pName=urlParams.get('product')||'your item';
+      var overlay=document.createElement('div');overlay.id='payment-success-overlay';
+      overlay.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:999999;font-family:system-ui,-apple-system,sans-serif;';
+      overlay.innerHTML='<div style="background:white;border-radius:16px;padding:40px;max-width:420px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.15);"><div style="width:64px;height:64px;border-radius:50%;background:#dcfce7;margin:0 auto 20px;display:flex;align-items:center;justify-content:center;"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><h2 style="margin:0 0 12px;font-size:24px;font-weight:700;color:#111827;">Payment Successful!</h2><p style="margin:0 0 24px;color:#6b7280;font-size:16px;">Thank you for purchasing '+pName.replace(/</g,'&lt;').replace(/>/g,'&gt;')+'.</p><button onclick="document.getElementById(\'payment-success-overlay\').remove();window.history.replaceState({},\'\',window.location.pathname);" style="padding:12px 32px;font-size:16px;font-weight:600;background:#16a34a;color:white;border:none;border-radius:8px;cursor:pointer;">Continue</button></div>';
+      document.body.appendChild(overlay);
+    }
+  });
+})();
+</script>  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- EPIC DIGITAL GATE INTRO -->
+    <div id="introScreen">
+        <div class="intro-gate-container">
+            <div class="scan-lines"></div>
+            
+            <!-- DIGITAL GATE -->
+            <div class="digital-gate">
+                <div class="gate-grid"></div>
+                <div class="gate-vlines"></div>
+                
+                <!-- CENTER PORTAL -->
+                <div class="gate-portal">
+                    <div class="iv-letters">IV</div>
+                    <div class="center-pulse"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- AUDIO: SPACECRAFT SOUNDS + ORCHESTRAL -->
+        <audio autoplay style="display: none;">
+            <source src="https://paymegpt.com/objects/generated-audio/1776328336282-c37802cb41d5eb5a.mp3" type="audio/mpeg">
+        </audio>
+        <audio autoplay style="display: none;">
+            <source src="https://paymegpt.com/objects/generated-audio/1776328678374-38ed7eb2bd6d0fa5.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <div class="scanlines"></div>
+    
+    <div class="container">
+        <!-- LEFT SIDE -->
+        <div class="intro-section">
+            <div class="intro-video-container">
+                <video autoplay muted loop>
+                    <source src="https://paymegpt.com/objects/generated-video/intro-iconic-vision.mp4" type="video/mp4">
+                </video>
+            </div>
+            <h1 class="studio-title">ICONIC VISION</h1>
+            <p class="subtitle">✧ Music Video Treatment Generator ✧</p>
+        </div>
+
+        <!-- RIGHT SIDE - FORM (SCROLLABLE) -->
+        <div class="generator-section">
+            <div class="form-container">
+                <h2 class="form-main-title">ICONIC VISION<br>STUDIOS</h2>
+                <p class="form-subtitle">Create your vision</p>
+
+                <div class="pricing-row">
+                    <div class="pricing-card">
+                        <h3>Full AI Video</h3>
+                        <div class="price">$700</div>
+                        <div class="price-detail">Treatment + AI Generated Video</div>
+                    </div>
+                    <div class="pricing-card">
+                        <h3>Pro Shoot</h3>
+                        <div class="price">$1500+</div>
+                        <div class="price-detail">Professional Sony Camera Crew</div>
+                    </div>
+                </div>
+
+                <form id="treatmentForm">
+                    <div class="form-group">
+                        <label for="songTitle">Song Title *</label>
+                        <input type="text" id="songTitle" name="songTitle" placeholder="e.g. Blinding Lights" required>
+                        <div class="form-hint">Enter your track name</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lyrics">Song Lyrics *</label>
+                        <textarea id="lyrics" name="lyrics" placeholder="Paste key lyrics or full song..." required></textarea>
+                        <div class="form-hint">Paste lyrics to analyze themes & visuals</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="artistName">Artist / Brand Name *</label>
+                        <input type="text" id="artistName" name="artistName" placeholder="Your name or brand" required>
+                        <div class="form-hint">Your creative identity</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="brandWebsite">Brand Website (Optional)</label>
+                        <input type="url" id="brandWebsite" name="brandWebsite" placeholder="https://yourband.com">
+                        <div class="form-hint">We analyze your aesthetic</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="brandVibe">Visual Vibe *</label>
+                        <select id="brandVibe" name="brandVibe" required>
+                            <option value="">Select a vibe...</option>
+                            <option value="dark-cinematic">Dark Cinematic</option>
+                            <option value="playful-energetic">Playful & Energetic</option>
+                            <option value="ethereal">Ethereal & Dreamlike</option>
+                            <option value="retro">Retro & Vintage</option>
+                            <option value="futuristic">Futuristic & Sci-Fi</option>
+                            <option value="aggressive">Aggressive & Raw</option>
+                            <option value="minimalist">Minimalist & Modern</option>
+                            <option value="artistic">Artistic & Abstract</option>
+                            <option value="epic">Epic & Cinematic</option>
+                            <option value="intimate">Intimate & Personal</option>
+                        </select>
+                        <div class="form-hint">Choose your creative direction</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="additionalNotes">Creative Direction (Optional)</label>
+                        <textarea id="additionalNotes" name="additionalNotes" placeholder="Any specific ideas? Inspirations?"></textarea>
+                        <div class="form-hint">Tell us your dreams</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                        <div class="form-hint">Where we'll send your treatment</div>
+                    </div>
+
+                    <button type="submit" class="submit-btn">ENTER THE STUDIO →</button>
+                </form>
+
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(0, 255, 136, 0.2); text-align: center; font-size: 11px; color: #88ff00;">
+                    [ TREATMENT GENERATION IN PROGRESS ] 7-STEP CREATIVE PROCESS
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('treatmentForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = {
+                contactName: document.getElementById('artistName').value,
+                contactEmail: document.getElementById('email').value,
+                data: {
+                    songTitle: document.getElementById('songTitle').value,
+                    lyrics: document.getElementById('lyrics').value,
+                    artistName: document.getElementById('artistName').value,
+                    brandWebsite: document.getElementById('brandWebsite').value,
+                    brandVibe: document.getElementById('brandVibe').value,
+                    additionalNotes: document.getElementById('additionalNotes').value
+                }
+            };
+
+            try {
+                const response = await fetch('https://paymegpt.com/api/webhooks/flow/2464/7363e0ee9ca4a6ee7ed17c22c18819866eb24c704268de00c41f5d6dec7345ac', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                if (response.ok) {
+                    alert('✧ WELCOME TO ICONIC VISION STUDIOS ✧\n\nYour treatment generation has begun.\nCheck your email for creative concepts.\n\n[STATUS: ANALYZING YOUR VISION]');
+                    document.getElementById('treatmentForm').reset();
+                } else {
+                    alert('Error submitting form. Please try again.');
+                }
+            } catch (error) {
+                console.error('Form submission error:', error);
+                alert('Connection error. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>
